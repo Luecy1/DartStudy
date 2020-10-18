@@ -18,8 +18,26 @@ void main() async {
 
   final oauthToken = OauthToken.fromJson(jsonDecode(response.body));
 
+  // Map<String,List<String>>
+  final queryParameters = {
+    'expansions': ['pinned_tweet_id'],
+    'user.fields': [
+      'name',
+      'created_at',
+      'description',
+    ],
+  };
+
+  // join request queryParameters
+  final params = queryParameters.entries.map((paramEntry) {
+    final value = paramEntry.value.join(',');
+    return '${paramEntry.key}=$value';
+  }).reduce((param1, param2) {
+    return '${param1}&${param2}';
+  });
+
   final result = await http.get(
-    'https://api.twitter.com/2/users/by/username/Luecy1',
+    'https://api.twitter.com/2/users/by/username/Luecy1?$params',
     headers: {'Authorization': 'Bearer ${oauthToken.accessToken}'},
   );
 
