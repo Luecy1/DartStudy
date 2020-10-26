@@ -11,9 +11,9 @@ void main() async {
     ACCESS_TOKEN,
     ACCESS_TOKEN_SECRET,
   );
-  // final response = await twitter.request('GET', 'favorites/list.json');
-  final response = await twitter.request('GET', 'statuses/home_timeline.json');
-  print(response.body);
+  final response = await twitter.request('GET', 'favorites/list.json');
+//  final response = await twitter.request('GET', 'statuses/home_timeline.json');
+
   List<dynamic> jsonResponce = json.decode(response.body);
   for (var tw in jsonResponce) {
     print(tw['user']['name']);
