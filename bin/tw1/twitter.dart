@@ -11,13 +11,26 @@ void main() async {
     ACCESS_TOKEN,
     ACCESS_TOKEN_SECRET,
   );
-  final response = await twitter.request('GET', 'favorites/list.json');
+  final response =
+      await twitter.request('GET', 'favorites/list.json?include_entities=true');
 //  final response = await twitter.request('GET', 'statuses/home_timeline.json');
 
-  List<dynamic> jsonResponce = json.decode(response.body);
-  for (var tw in jsonResponce) {
-    print(tw['user']['name']);
-    print(tw['text']);
+  print(response.body);
+
+  List<dynamic> jsonResponse = json.decode(response.body);
+  for (var tw in jsonResponse) {
+    final extendedEntities = tw['extended_entities'];
+    if (extendedEntities != null) {
+      final media = extendedEntities['media'] as List<dynamic>;
+      if (media != null) {
+        print('------------------------------------------------');
+        print(tw['user']['name']);
+        print(tw['text']);
+        for (var me in media) {
+          print(me['media_url_https']);
+        }
+      }
+    }
   }
 
   twitter.close();
