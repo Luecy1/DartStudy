@@ -3,15 +3,29 @@ import 'dart:io';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
+import 'env.dart';
+
 Future<void> main() async {
   Intl.defaultLocale = 'ja';
   await initializeDateFormatting('ja_JP');
 
-  final now = DateFormat('yyyyMMddHHmmss').format(DateTime.now());
+  final now = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
 
   final deviceList = await getDeviceList();
 
-  await screenshot('${now}.png', deviceList.first);
+  var index = 0;
+  for (var device in deviceList) {
+    final fileName = '${now}_${index}.png';
+    eachDeviceScreenshot(fileName, device);
+    index++;
+  }
+}
+
+void eachDeviceScreenshot(String fileName, String device) async {
+  await screenshot(fileName, device);
+
+  final file = File(fileName);
+  await file.rename('${SCREEN_SHOT_OUT_PATH}\\$fileName');
 }
 
 Future<List<String>> getDeviceList() async {
